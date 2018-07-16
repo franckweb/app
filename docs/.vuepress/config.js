@@ -33,10 +33,7 @@ module.exports = {
 
       // fallback
       '/': [
-        '',
-        'user-guide',
-        'developer-guide',
-        'contributors-guide',
+        ''
       ]
     }
   }
