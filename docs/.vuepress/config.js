@@ -28,7 +28,8 @@ module.exports = {
         'working-with-github',
         'setting-up-local-dev-env',
         'translations-and-title-format',
-        'using-the-api'
+        'using-the-api',
+        'globals',
       ],
 
       // fallback
