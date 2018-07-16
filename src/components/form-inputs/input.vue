@@ -193,6 +193,10 @@ export default {
     &:read-only {
       background-color: var(--lightest-gray);
       cursor: not-allowed;
+      &:focus {
+        color: var(--gray);
+        border-color: var(--lighter-gray);
+      }
     }
   }
 
