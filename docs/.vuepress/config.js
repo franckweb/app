@@ -8,8 +8,8 @@ module.exports = {
     nav: [
       { text: 'Home', link: '/' },
       { text: 'User Guide', link: '/user-guide/' },
+      { text: 'Admin Guide', link: '/admin-guide/' },
       { text: 'Developer Guide', link: '/developer-guide/' },
-      { text: 'Contributors Guide', link: '/contributors-guide/' },
     ],
     repo: 'directus/app',
     docsDir: 'docs',
@@ -19,17 +19,26 @@ module.exports = {
         '',
       ],
 
-      '/developer-guide/': [
+      '/admin-guide/': [
         '',
       ],
 
-      '/contributors-guide/': [
+      '/developer-guide/': [
         '',
-        'working-with-github',
-        'setting-up-local-dev-env',
-        'translations-and-title-format',
-        'using-the-api',
+        'edit-form-grid',
+        'error-handling',
+        'events',
+        'github',
         'globals',
+        'helpers',
+        'i18n',
+        'install-dev',
+        'modals',
+        'notifications',
+        'running-rabbit',
+        'sdk-api',
+        'store',
+        'styleguide'
       ],
 
       // fallback
