@@ -293,22 +293,23 @@ export default {
       this.error = null;
       this.notInstalled = false;
 
-      this.$axios.get(
-        this.url + "/server/ping"
-      ).then(() => {
-        this.exists = true;
-        this.checkingExistence = false;
-      }).catch(err => {
-        if (err.response && err.response.status === 503) {
-          this.notInstalled = true;
+      this.$axios
+        .get(this.url + "/server/ping")
+        .then(() => {
           this.exists = true;
-        } else {
-          this.exists = false;
-          this.notInstalled = false;
-        }
+          this.checkingExistence = false;
+        })
+        .catch(err => {
+          if (err.response && err.response.status === 503) {
+            this.notInstalled = true;
+            this.exists = true;
+          } else {
+            this.exists = false;
+            this.notInstalled = false;
+          }
 
-        this.checkingExistence = false;
-      });
+          this.checkingExistence = false;
+        });
     },
     getThirdPartyAuthProviders() {
       this.gettingThirdPartyAuthProviders = true;
@@ -363,10 +364,8 @@ export default {
       }
     },
     install(info) {
-      this.$axios.post(
-        this.url + "/install",
-        info
-      )
+      this.$axios
+        .post(this.url + "/install", info)
         .then(() => {
           alert("DONE");
         })

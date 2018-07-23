@@ -142,7 +142,8 @@ export default {
   interface_settings:
     "Every interface can be perfectly tailored to your needs. Below are the available options for this interface, but only some are required.",
   install: "Install",
-  install_copy: "This API has not yet been configured. Would you like to install and configure it now?",
+  install_copy:
+    "This API has not yet been configured. Would you like to install and configure it now?",
   is_empty: "Is empty",
   is_not_null: "Is not NULL",
   is_null: "Is NULL",
