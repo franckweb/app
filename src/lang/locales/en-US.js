@@ -141,6 +141,8 @@ export default {
     "Directus sets intelligent defaults for the more advanced configuration settings, but you can override those here too!",
   interface_settings:
     "Every interface can be perfectly tailored to your needs. Below are the available options for this interface, but only some are required.",
+  install: "Install",
+  install_copy: "This API hasn't been configured yet. Do you want to configure it now?",
   is_empty: "Is empty",
   is_not_null: "Is not NULL",
   is_null: "Is NULL",

@@ -23,17 +23,19 @@
         </label>
 
         <template v-if="notInstalled">
+          <p class="install-copy">
+            {{ $t("install_copy") }}
+          </p>
           <button class="style-btn" @click="installing = true">
             {{ $t("install") }}
           </button>
         </template>
 
         <template v-else>
-
           <div class="material-input">
             <input
               v-model="email"
-              :disabled="loading"
+              :disabled="loading || exists === false"
               :class="{ 'has-value': email && email.length > 0}"
               type="text"
               id="email"
@@ -44,7 +46,7 @@
           <div v-if="!resetMode" class="material-input">
             <input
               v-model="password"
-              :disabled="loading"
+              :disabled="loading || exists === false"
               :class="{ 'has-value': password && password.length > 0}"
               type="password"
               id="password"
@@ -80,7 +82,7 @@
               line-fg-color="var(--gray)"
               line-bg-color="var(--lighter-gray)" />
 
-            <span key="error" class="notice" v-else-if="error" :class="errorType">
+            <span key="error" class="notice" v-else-if="error" :class="errorType" @click="error = null">
               <i class="material-icons">{{ errorType }}</i>
               {{ errorMessage }}
             </span>
@@ -212,6 +214,8 @@ export default {
     exists(newVal, oldVal) {
       if (newVal === true && newVal !== oldVal) {
         this.getThirdPartyAuthProviders();
+      } else {
+        this.error = { code: -1 };
       }
     },
     $route() {
@@ -219,11 +223,6 @@ export default {
     },
     storeError(error) {
       this.error = error;
-    },
-    error() {
-      setTimeout(() => {
-        this.error = null;
-      }, 10000);
     }
   },
   methods: {
@@ -479,9 +478,13 @@ select {
       -webkit-box-shadow: 0 0 0px 1000px var(--white) inset;
     }
 
-    &:hover {
+    &:hover:not([disabled]) {
       transition: none;
       border-color: var(--darker-gray);
+    }
+
+    &[disabled] {
+      cursor: not-allowed;
     }
 
     &:focus {
@@ -736,5 +739,10 @@ small {
   &.error {
     color: var(--danger);
   }
+}
+
+.install-copy {
+  line-height: 1.6;
+  margin-bottom: 40px;
 }
 </style>
