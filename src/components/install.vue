@@ -9,10 +9,6 @@
         :class="{ active: activeTab === 'database' }"
         @click="activeTab = 'database'"
         :disabled="databaseDisabled">{{ $t('database') }}</button>
-      <button
-        :class="{ active: activeTab === 'schema' }"
-        @click="activeTab = 'schema'"
-        :disabled="schemaDisabled">{{ $t('schema') }}</button>
     </div>
 
     <div class="tab" v-show="activeTab === 'project'">
@@ -20,16 +16,56 @@
       <p>
         {{ $t("project_info_copy" )}}
       </p>
+
+      <form @submit.prevent>
+        <label>
+          {{ $t("project_name") }}
+          <v-input class="input" id="project-name" v-model="values.project_name" />
+        </label>
+        <label>
+          {{ $t("environment") }}
+          <v-input class="input" id="environment" disabled value="Default ( _ )" />
+        </label>
+        <label>
+          {{ $t("admin_email") }}
+          <v-input class="input" id="admin-email" type="email" v-model="values.user_email" />
+        </label>
+        <label>
+          {{ $t("admin_password") }}
+          <v-input class="input" id="admin-password" type="password" v-model="values.user_password" autocomplete="new-password" />
+        </label>
+      </form>
     </div>
 
     <div class="tab" v-show="activeTab === 'database'">
       <h1 class="style-0">{{ $t("database_connection") }}</h1>
       <p>{{ $t("database_connection_copy") }}</p>
-    </div>
-
-    <div class="tab" v-show="activeTab === 'schema'">
-      <h1 class="style-0">{{ $t("initial_schema") }}</h1>
-      <p>{{ $t("initial_schema_copy") }}</p>
+      <form @submit.prevent>
+        <label>
+          {{ $t("host") }}
+          <v-input class="input" id="db_host" v-model="values.db_host" />
+        </label>
+        <label>
+          {{ $t("port") }}
+          <v-input class="input" id="db_port" v-model="values.db_port" />
+        </label>
+        <label>
+          {{ $t("db_user") }}
+          <v-input class="input" id="db_user" v-model="values.db_user" />
+        </label>
+        <label>
+          {{ $t("db_password") }}
+          <v-input type="password" class="input" id="db_password" v-model="values.db_password" />
+        </label>
+        <label>
+          {{ $t("db_name") }}
+          <v-input class="input" id="db_name" v-model="values.db_name" />
+        </label>
+        <label>
+          {{ $t("db_type") }}
+          <v-input class="input" disabled id="db_type" value="MySQL & Variants" />
+        </label>
+      </form>
     </div>
 
   </v-modal>
@@ -43,29 +79,50 @@ export default {
       activeTab: "project",
       saving: false,
 
-      values: {}
+      values: {
+        db_host: "localhost",
+        db_port: 3306,
+        db_name: "directus",
+        db_user: "root",
+        db_password: null,
+        user_email: null,
+        user_password: null,
+        project_name: "Directus"
+      }
     };
   },
   computed: {
     databaseDisabled() {
-      return true;
+      const { isEmpty } = this.$lodash;
+      const { project_name, user_email, user_password } = this.values;
+
+      return (
+        isEmpty(project_name) || isEmpty(user_email) || isEmpty(user_password)
+      );
     },
     schemaDisabled() {
-      return true;
+      const { isEmpty } = this.$lodash;
+      const { db_host, db_port, db_name, db_user, db_password } = this.values;
+
+      return (
+        isEmpty(db_host) ||
+        isEmpty(db_port) ||
+        isEmpty(db_name) ||
+        isEmpty(db_user) ||
+        isEmpty(db_password)
+      );
     },
     buttons() {
       let disabled = false;
 
-      if (this.activeTab === "project" && !this.interfaceName)
+      if (this.activeTab === "project" && this.databaseDisabled)
         disabled = true;
-
-      if (this.activeTab === "database" && !this.field) disabled = true;
 
       return {
         next: {
           disabled,
           text:
-            this.activeTab === "schema" ? this.$t("save") : this.$t("next"),
+            this.activeTab === "database" ? this.$t("save") : this.$t("next"),
           loading: this.saving
         }
       };
@@ -74,13 +131,10 @@ export default {
   methods: {
     nextTab() {
       switch (this.activeTab) {
-        case "projectj":
+        case "project":
           this.activeTab = "database";
           break;
         case "database":
-          this.activeTab = "schema";
-          break;
-        case "schema":
         default:
           this.save();
           break;
@@ -163,6 +217,17 @@ export default {
       color: var(--lighter-gray);
       cursor: not-allowed;
     }
+  }
+}
+
+form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  padding: 50px 0;
+
+  .input {
+    margin-top: 10px;
   }
 }
 </style>

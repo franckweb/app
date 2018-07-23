@@ -352,9 +352,7 @@ export default {
           });
       }
     },
-    install() {
-
-    }
+    install() {}
   }
 };
 </script>
