@@ -352,7 +352,21 @@ export default {
           });
       }
     },
-    install() {}
+    install(info) {
+      this.$axios.post(
+        this.url + "/install",
+        info
+      )
+        .then(() => {
+          alert("DONE");
+        })
+        .catch(error => {
+          this.$events.emit("error", {
+            notify: this.$t("something_went_wrong_body"),
+            error
+          });
+        });
+    }
   }
 };
 </script>

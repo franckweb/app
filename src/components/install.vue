@@ -87,7 +87,8 @@ export default {
         db_password: null,
         user_email: null,
         user_password: null,
-        project_name: "Directus"
+        project_name: "Directus",
+        cors_enabled: true
       }
     };
   },
@@ -141,6 +142,7 @@ export default {
       }
     },
     save() {
+      this.saving = true;
       this.$emit("install", this.values);
     }
   }
