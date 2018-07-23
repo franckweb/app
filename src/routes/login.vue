@@ -66,43 +66,43 @@
               {{ resetMode ? $t('reset_password') : $t('sign_in') }}
             </button>
           </div>
-        </template>
 
-        <transition-group
-          name="list"
-          tag="div"
-          class="stack">
-          <v-spinner
-            v-if="checkingExistence || gettingThirdPartyAuthProviders"
-            class="spinner"
-            key="spinner"
-            :size="18"
-            :line-size="2"
-            line-fg-color="var(--gray)"
-            line-bg-color="var(--lighter-gray)" />
+          <transition-group
+            name="list"
+            tag="div"
+            class="stack">
+            <v-spinner
+              v-if="checkingExistence || gettingThirdPartyAuthProviders"
+              class="spinner"
+              key="spinner"
+              :size="18"
+              :line-size="2"
+              line-fg-color="var(--gray)"
+              line-bg-color="var(--lighter-gray)" />
 
-          <span key="error" class="notice" v-else-if="error" :class="errorType">
-            <i class="material-icons">{{ errorType }}</i>
-            {{ errorMessage }}
-          </span>
+            <span key="error" class="notice" v-else-if="error" :class="errorType">
+              <i class="material-icons">{{ errorType }}</i>
+              {{ errorMessage }}
+            </span>
 
-          <i
-            v-else-if="thirdPartyAuthProviders && !thirdPartyAuthProviders.length"
-            key="lock"
-            class="material-icons lock">{{ loggedIn ? "lock_open" : "lock_outline" }}</i>
+            <i
+              v-else-if="thirdPartyAuthProviders && !thirdPartyAuthProviders.length"
+              key="lock"
+              class="material-icons lock">{{ loggedIn ? "lock_open" : "lock_outline" }}</i>
 
-          <ul v-else class="third-party-auth" key="third-party-auth">
-            <li
-              v-for="provider in thirdPartyAuthProviders"
-              :key="provider.name">
-              <a v-tooltip.bottom="$helpers.formatTitle(provider.name)" :href="url + '/_/auth/sso/' + provider.name">
-                <img
-                  :alt="provider.name"
-                  :src="provider.icon">
-              </a>
-            </li>
-          </ul>
+            <ul v-else class="third-party-auth" key="third-party-auth">
+              <li
+                v-for="provider in thirdPartyAuthProviders"
+                :key="provider.name">
+                <a v-tooltip.bottom="$helpers.formatTitle(provider.name)" :href="url + '/_/auth/sso/' + provider.name">
+                  <img
+                    :alt="provider.name"
+                    :src="provider.icon">
+                </a>
+              </li>
+            </ul>
           </transition-group>
+        </template>
       </form>
 
       <small v-tooltip="{ classes: ['inverted'], content: version }" class="style-4">{{ $t('powered_by_directus') }}</small>
@@ -365,7 +365,7 @@ export default {
     },
     install(info) {
       this.$axios.post(
-        this.url + "/instance",
+        this.url + "/install",
         info
       )
         .then(() => {
