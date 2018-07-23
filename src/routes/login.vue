@@ -1,7 +1,10 @@
 <template>
   <transition name="fade">
     <div class="login" :class="{ loading }">
-      <form @submit.prevent="processForm">
+
+      <v-install v-if="true" @install="install" />
+
+      <form v-else @submit.prevent="processForm">
         <img class="logo" alt="" src="../assets/logo-dark.svg" />
 
         <h1 v-if="loading">{{ loggedIn? $t('fetching_data') : $t('signing_in') }}</h1>
@@ -92,6 +95,7 @@
           </ul>
           </transition-group>
       </form>
+
       <small v-tooltip="{ classes: ['inverted'], content: version }" class="style-4">{{ $t('powered_by_directus') }}</small>
     </div>
   </transition>
@@ -101,8 +105,13 @@
 import sdk from "directus-sdk-javascript/remote";
 import { version } from "../../package.json";
 
+import VInstall from "../components/install.vue";
+
 export default {
   name: "login",
+  components: {
+    VInstall
+  },
   data() {
     return {
       url: null,
@@ -342,6 +351,9 @@ export default {
             });
           });
       }
+    },
+    install() {
+
     }
   }
 };
