@@ -28,3 +28,5 @@
 * [Using the API (SDK)](./sdk-api.md)
 * [Store](./store.md)
 * [Styleguide](./styleguide.md)
+* [Tooltips](./tooltips.md)
+* [Troubleshooting](./troubleshooting.md)
