@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class="login" :class="{ loading }">
 
-      <v-install v-if="true" @install="install" />
+      <v-install v-if="installing" @install="install" />
 
       <form v-else @submit.prevent="processForm">
         <img class="logo" alt="" src="../assets/logo-dark.svg" />
@@ -22,42 +22,51 @@
           {{ $t('to') }} <span>{{ $helpers.formatTitle(urls[url] || $t('choose_project')) }} <i class="material-icons">arrow_drop_down</i></span>
         </label>
 
-        <div class="material-input">
-          <input
-            v-model="email"
-            :disabled="loading"
-            :class="{ 'has-value': email && email.length > 0}"
-            type="text"
-            id="email"
-            name="email" />
-          <label for="email">{{ $t('email') }}</label>
-        </div>
-
-        <div v-if="!resetMode" class="material-input">
-          <input
-            v-model="password"
-            :disabled="loading"
-            :class="{ 'has-value': password && password.length > 0}"
-            type="password"
-            id="password"
-            name="password" />
-          <label for="password">{{ $t('password') }}</label>
-        </div>
-        <div class="buttons">
-          <button
-            type="button"
-            class="forgot"
-            @click.prevent="resetMode = !resetMode" >
-            {{ resetMode? $t('sign_in') : $t('forgot_password') }}
+        <template v-if="notInstalled">
+          <button class="style-btn" @click="installing = true">
+            {{ $t("install") }}
           </button>
+        </template>
 
-          <button
-            class="style-btn"
-            type="submit"
-            :disabled="disabled || loading">
-            {{ resetMode ? $t('reset_password') : $t('sign_in') }}
-          </button>
-        </div>
+        <template v-else>
+
+          <div class="material-input">
+            <input
+              v-model="email"
+              :disabled="loading"
+              :class="{ 'has-value': email && email.length > 0}"
+              type="text"
+              id="email"
+              name="email" />
+            <label for="email">{{ $t('email') }}</label>
+          </div>
+
+          <div v-if="!resetMode" class="material-input">
+            <input
+              v-model="password"
+              :disabled="loading"
+              :class="{ 'has-value': password && password.length > 0}"
+              type="password"
+              id="password"
+              name="password" />
+            <label for="password">{{ $t('password') }}</label>
+          </div>
+          <div class="buttons">
+            <button
+              type="button"
+              class="forgot"
+              @click.prevent="resetMode = !resetMode" >
+              {{ resetMode? $t('sign_in') : $t('forgot_password') }}
+            </button>
+
+            <button
+              class="style-btn"
+              type="submit"
+              :disabled="disabled || loading">
+              {{ resetMode ? $t('reset_password') : $t('sign_in') }}
+            </button>
+          </div>
+        </template>
 
         <transition-group
           name="list"
@@ -127,7 +136,10 @@ export default {
       thirdPartyAuthProviders: null,
       gettingThirdPartyAuthProviders: false,
 
-      resetMode: false
+      resetMode: false,
+
+      installing: false,
+      notInstalled: false
     };
   },
   computed: {
@@ -280,21 +292,24 @@ export default {
       this.exists = false;
       this.thirdPartyAuthProviders = null;
       this.error = null;
+      this.notInstalled = false;
 
-      const scopedAPI = new sdk();
-
-      scopedAPI.url = this.url;
-
-      scopedAPI
-        .ping()
-        .then(() => {
+      this.$axios.get(
+        this.url + "/server/ping"
+      ).then(() => {
+        this.exists = true;
+        this.checkingExistence = false;
+      }).catch(err => {
+        if (err.response && err.response.status === 503) {
+          this.notInstalled = true;
           this.exists = true;
-          this.checkingExistence = false;
-        })
-        .catch(() => {
+        } else {
           this.exists = false;
-          this.checkingExistence = false;
-        });
+          this.notInstalled = false;
+        }
+
+        this.checkingExistence = false;
+      });
     },
     getThirdPartyAuthProviders() {
       this.gettingThirdPartyAuthProviders = true;
@@ -312,10 +327,6 @@ export default {
           this.gettingThirdPartyAuthProviders = false;
         })
         .catch(error => {
-          this.$events.emit("error", {
-            notify: this.$t("something_went_wrong_body"),
-            error
-          });
           this.gettingThirdPartyAuthProviders = false;
         });
     },
@@ -354,7 +365,7 @@ export default {
     },
     install(info) {
       this.$axios.post(
-        this.url + "/install",
+        this.url + "/instance",
         info
       )
         .then(() => {
@@ -521,9 +532,9 @@ select {
   }
 }
 
-button[type="submit"] {
-  background-color: var(--darker-gray);
+button.style-btn {
   font-size: 14px;
+  background-color: var(--darker-gray);
   width: 100%;
   display: block;
   padding: 10px 0;
