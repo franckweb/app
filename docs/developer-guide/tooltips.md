@@ -10,4 +10,12 @@ Directus has the [`v-tooltip`](https://github.com/Akryum/v-tooltip) library inst
 <p v-tooltip="€1">$1.17</p>
 ```
 
+## Inverse colors
+
+When rendering a tooltip on a dark background, you can render the tooltip with the `inverted` class added. This'll render the tooltip with a light-gray background and dark text versus the regular white text on a dark background:
+
+```vue
+<button v-tooltip="{ classes: ['inverted'], content: 'Click to save!' }">Save</button>
+```
+
 Please checkout the docs for [`v-tooltip`](https://github.com/Akryum/v-tooltip) for more advanced usage instructions.
