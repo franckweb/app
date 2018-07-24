@@ -2,10 +2,6 @@
   <div
     :class="{ 'icon-left': iconLeft, 'icon-right': iconRight }"
     class="v-input">
-    <i
-      v-if="iconLeft"
-      :class="iconLeftColor"
-      class="material-icons">{{ iconLeft }}</i>
     <input
       ref="input"
       :class="{charactercount}"
@@ -26,6 +22,10 @@
       @keyup="$emit('keyup', $event)"
       @keydown="$emit('keydown', $event)"
       @input="$emit('input', $event.target.value)">
+    <i
+      v-if="iconLeft"
+      :class="iconLeftColor"
+      class="material-icons">{{ iconLeft }}</i>
     <i
       v-if="iconRight"
       :class="iconRightColor"
@@ -103,7 +103,7 @@ export default {
       type: String,
       default: null,
       validator(val) {
-        return ["accent", "secondary", "success", "warning", "danger"].includes(
+        return ["accent", "secondary", "success", "warning", "danger", ""].includes(
           val
         );
       }
@@ -116,7 +116,7 @@ export default {
       type: String,
       default: "accent",
       validator(val) {
-        return ["accent", "secondary", "success", "warning", "danger"].includes(
+        return ["accent", "secondary", "success", "warning", "danger", ""].includes(
           val
         );
       }
@@ -163,7 +163,7 @@ export default {
     height: var(--input-height);
 
     &::placeholder {
-      color: var(--light-gray);
+      color: var(--lighter-gray);
     }
 
     &:focus {
@@ -172,8 +172,8 @@ export default {
       outline: 0;
     }
 
-    &:focus + i {
-      color: var(--accent);
+    &:focus ~ i {
+      color: var(--light-gray);
     }
 
     &:-webkit-autofill {
@@ -216,20 +216,20 @@ export default {
   }
 
   &.icon-left input {
-    padding-left: 33px;
+    padding-left: 38px;
   }
 
   &.icon-right input {
-    padding-right: 33px;
+    padding-right: 38px;
   }
 
   &.icon-left i,
   &.icon-right i {
     position: absolute;
     top: 50%;
-    color: var(--light-gray);
+    color: var(--lighter-gray);
     transform: translateY(-50%);
-    font-size: 18px;
+    font-size: 24px;
 
     &.accent {
       color: var(--accent);
